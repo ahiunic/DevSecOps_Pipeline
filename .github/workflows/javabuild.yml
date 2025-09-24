@@ -38,6 +38,8 @@ jobs:
     #     run: |
     # check the curent jf config show and then delete it jf config rm name
     #         jfrog config add my-artifactory --url=https://trial42aeja.jfrog.io --apikey=${{ secrets.JFROG_TOKEN }}
+
+    #checek current jfrog cofig and delete
       - name: Configure JFrog CLI
         uses: jfrog/setup-jfrog-cli@v3
         with:
