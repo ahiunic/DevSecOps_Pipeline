@@ -4,11 +4,12 @@ name: Build
 on:
   push:
     branches:
-      - main   # change this if you want other branches
+      - main
 
 jobs:
   build:
-    runs-on: java_build
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -29,24 +30,6 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
-      # Uncomment if you want to upload artifacts
-      # - name: Upload Build Artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: jar
-      #     path: target/*.jar
-<<<<<<< HEAD
-
-=======
-        
-    #   - name: Configure JFrog CLI
-    # token
-    #     run: |
-    # check the curent jf config show and then delete it jf config rm name
-    #         jfrog config add my-artifactory --url=https://trial42aeja.jfrog.io --apikey=${{ secrets.JFROG_TOKEN }}
-
-    #checek current jfrog cofig and delete
->>>>>>> 73ce16631aa4ff219d9405e74d2a504174adb768
       - name: Configure JFrog CLI
         uses: jfrog/setup-jfrog-cli@v3
         with:
@@ -55,6 +38,12 @@ jobs:
           JF_URL: https://trialgvt68y.jfrog.io
           JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }}
 
-      - name: Upload JAR to JFrog
+      - name: Verify JFrog connection
+        run: jfrog rt ping
+
+      - name: Debug JFrog Repo
+        run: jfrog rt curl /api/repositories/petcho-libs-snapshot
+
+      - name: Upload JAR to JFrog (Snapshot)
         run: |
-          jf rt u "target/*.jar" "petjfrog-repo/"
+          jfrog rt u "target/*.jar" "petcho-libs-snapshot/"
