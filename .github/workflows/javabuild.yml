@@ -1,8 +1,10 @@
 # .github/workflows/build.yml
 name: Build
 
-on: 
- workflow_call:
+on:
+  push:
+    branches:
+      - main   # change this if you want other branches
 
 jobs:
   build:
@@ -27,17 +29,13 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
+      # Uncomment if you want to upload artifacts
       # - name: Upload Build Artifact
       #   uses: actions/upload-artifact@v3
       #   with:
       #     name: jar
       #     path: target/*.jar
-        
-    #   - name: Configure JFrog CLI
-    # token
-    #     run: |
-    # check the curent jf config show and then delete it jf config rm name
-    #         jfrog config add my-artifactory --url=https://trial42aeja.jfrog.io --apikey=${{ secrets.JFROG_TOKEN }}
+
       - name: Configure JFrog CLI
         uses: jfrog/setup-jfrog-cli@v3
         with:
@@ -45,6 +43,7 @@ jobs:
         env:
           JF_URL: https://trialgvt68y.jfrog.io
           JF_ACCESS_TOKEN: ${{ secrets.JFROG_TOKEN }}
+
       - name: Upload JAR to JFrog
         run: |
-           jf rt u "target/*.jar" "petjfrog-repo/"     
+          jf rt u "target/*.jar" "petjfrog-repo/"
